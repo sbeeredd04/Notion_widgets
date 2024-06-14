@@ -34,6 +34,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      overflow-y: auto;
     }
     .quote {
       font-size: 8vh; /* Responsive font size */
@@ -41,6 +42,29 @@
       overflow-wrap: break-word;
       max-height: 100%;
       line-height: 1.2;
+    }
+
+    /* Custom scrollbar styles */
+    .quote-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .quote-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .quote-container::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.5); 
+      border-radius: 10px;
+    }
+    .quote-container:hover::-webkit-scrollbar-thumb {
+      background-color: white; 
+    }
+
+    .quote-container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+    }
+    .quote-container:hover {
+      scrollbar-color: white transparent;
     }
   </style>
 </head>
