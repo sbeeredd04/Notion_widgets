@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Quote Generator</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap");
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: monospace;
+      background-color: #000;
+      color: #e5ebf3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .quote-container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .quote {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .new-quote-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #e5ebf3;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="quote-container">
+    <div id="quote" class="quote"></div>
+    <button class="new-quote-button" onclick="generateRandomQuote()">New Quote</button>
+  </div>
+  <script>
+    let quotes = [];
+    let backgrounds = [];
+
+    const loadQuotes = async () => {
+      try {
+        const response = await fetch('/workspaces/Notion_widgets/Quotes/quotes.json');
+        if (!response.ok) throw new Error('Failed to load quotes');
+        quotes = await response.json();
+      } catch (error) {
+        console.error('Error loading quotes:', error);
+      }
+    };
+
+    const loadBackgrounds = async () => {
+      try {
+        const response = await fetch('backgrounds.json');
+        if (!response.ok) throw new Error('Failed to load backgrounds');
+        backgrounds = await response.json();
+      } catch (error) {
+        console.error('Error loading backgrounds:', error);
+      }
+    };
+
+    const generateRandomQuote = () => {
+      if (quotes.length > 0 && backgrounds.length > 0) {
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+        document.getElementById('quoteText').innerText = randomQuote;
+        document.body.style.backgroundImage = `url('notion_slider/${randomBackground}')`;
+      }
+    };
+
+    const init = async () => {
+      await loadQuotes();
+      await loadBackgrounds();
+      generateRandomQuote();
+    };
+
+    init();
+  </script>
+</body>
+</html>
