@@ -11,7 +11,7 @@
       padding: 0;
     }
     body {
-      font-family: monospace;
+      font-family: "Lexend", sans-serif;
       background-color: #000;
       color: #e5ebf3;
       display: flex;
@@ -19,7 +19,7 @@
       align-items: center;
       height: 100vh;
       text-align: center;
-      background-size: contain;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
     }
@@ -27,34 +27,32 @@
       background-color: rgba(0, 0, 0, 0.7);
       padding: 20px;
       border-radius: 10px;
+      max-width: 90%;
+      max-height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     .quote {
-      font-size: 1.5rem;
+      font-size: 5vw; /* Responsive font size */
       margin-bottom: 20px;
-    }
-    .new-quote-button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background-color: #e5ebf3;
-      color: #000;
+      overflow-wrap: break-word;
     }
   </style>
 </head>
 <body>
   <div class="quote-container">
     <div id="quote" class="quote"></div>
-    <button class="new-quote-button" onclick="generateRandomQuote()">New Quote</button>
   </div>
   <script>
     let quotes = [];
     let backgrounds = [];
+    const intervalTime = 100000; // Change quote every 10 seconds
 
     const loadQuotes = async () => {
       try {
-        const response = await fetch('/workspaces/Notion_widgets/Quotes/quotes.json');
+        const response = await fetch('Quotes/quotes.json'); // Ensure the path is correct
         if (!response.ok) throw new Error('Failed to load quotes');
         quotes = await response.json();
       } catch (error) {
@@ -64,7 +62,7 @@
 
     const loadBackgrounds = async () => {
       try {
-        const response = await fetch('backgrounds.json');
+        const response = await fetch('Quotes/backgrounds.json'); // Ensure the path is correct
         if (!response.ok) throw new Error('Failed to load backgrounds');
         backgrounds = await response.json();
       } catch (error) {
@@ -76,7 +74,7 @@
       if (quotes.length > 0 && backgrounds.length > 0) {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-        document.getElementById('quoteText').innerText = randomQuote;
+        document.getElementById('quote').innerText = `"${randomQuote.quoteText}"`;
         document.body.style.backgroundImage = `url('notion_slider/${randomBackground}')`;
       }
     };
@@ -85,6 +83,7 @@
       await loadQuotes();
       await loadBackgrounds();
       generateRandomQuote();
+      setInterval(generateRandomQuote, intervalTime);
     };
 
     init();
