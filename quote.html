@@ -33,11 +33,14 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: scroll;
+      overflow: hidden;
     }
     .quote {
       font-size: 8vh; /* Responsive font size */
       margin-bottom: 10px;
+      overflow-wrap: break-word;
+      max-height: 100%;
+      line-height: 1.2;
     }
   </style>
 </head>
@@ -48,7 +51,7 @@
   <script>
     let quotes = [];
     let backgrounds = [];
-    const intervalTime = 100000; // Change quote every 10 seconds
+    const intervalTime = 10000; // Change quote every 10 seconds
 
     const loadQuotes = async () => {
       try {
@@ -70,12 +73,27 @@
       }
     };
 
+    const adjustFontSize = () => {
+      const quoteElement = document.getElementById('quote');
+      const container = document.querySelector('.quote-container');
+      let fontSize = parseFloat(window.getComputedStyle(quoteElement).fontSize);
+
+      while (
+        (quoteElement.scrollHeight > container.clientHeight ||
+        quoteElement.scrollWidth > container.clientWidth) && fontSize > 10
+      ) {
+        fontSize -= 1;
+        quoteElement.style.fontSize = fontSize + 'px';
+      }
+    };
+
     const generateRandomQuote = () => {
       if (quotes.length > 0 && backgrounds.length > 0) {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
         document.getElementById('quote').innerText = `"${randomQuote.quoteText}"`;
         document.body.style.backgroundImage = `url('notion_slider/${randomBackground}')`;
+        adjustFontSize(); // Adjust font size to fit container
       }
     };
 
